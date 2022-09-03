@@ -5,9 +5,13 @@ var router = express.Router();
 // var Property = require('../models/property');
 // var Reservation = require('../models/reservation');
 // var User = require('../models/user');
-// var notifier = require('../lib/notifier');
+var notifier = require('../src/send');
 
 // POST: /reservations
+// This first method is for server initiated massages which are 
+// *status updates* - (time based) 
+// *send result after matching*
+// *survey*
 router.post('/', function (req, res) {
 //   var propertyId = req.body.propertyId;
 //   var user = req.user;
@@ -33,11 +37,13 @@ router.post('/', function (req, res) {
 });
 
 // POST: /reservations/handle
+// This second method is for user initiated massages which are everything else, 
+// use stage to determine what to do response
 router.post('/handle', twilio.webhook({validate: false}), function (req, res) {
-//   var from = req.body.From;
-//   var smsRequest = req.body.Body;
-
-//   var smsResponse;
+  var from = req.body.From;
+  var smsRequest = req.body.Body;
+  console.log(req.body)
+  var smsResponse;
 
 //   User.findOne({phoneNumber: from})
 //   .then(function (host) {
@@ -58,6 +64,9 @@ router.post('/handle', twilio.webhook({validate: false}), function (req, res) {
 //     var message = "Sorry, it looks like you do not have any reservations to respond to";
 //     respond(res, message);
 //   });
+// respond(res, "hello");
+// notifier.sendNotification();
+respond(res, `The following message has been received by SMS bot: ${smsRequest}`);
 res.send("/handle")
 });
 
