@@ -68,6 +68,10 @@ const parseReqYesNo = async function (smsRequest) {
     return;
 }
 
+const parseReqSurvey = async function (smsRequest) {
+    return;
+}
+
 //move session to next stage; res: response
 //return whether user response is valid
 const handle = async function(from, smsRequest) {
