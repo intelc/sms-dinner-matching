@@ -14,7 +14,7 @@ var sessionManager = require('../src/sessionManager');
 router.post('/', function (req, res) {
   var from = req.body.From;
   var smsContent = req.body.Body;
-  
+  console.log("post endpoint: ");
   try{
     send(from, smsContent)
   }catch(err){

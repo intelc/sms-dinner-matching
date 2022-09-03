@@ -1,5 +1,5 @@
 //take a message string and extract a list of unique single-digit integers from it
-const parseReqNumber = async function (message) {
+const parseReqNumber =  function (message) {
     var numList = [];
     for (var i = 0; i < message.length; i++) {
         var c = message.charAt(i);
@@ -14,7 +14,7 @@ const parseReqNumber = async function (message) {
 }
 
 //take a message string and extract a boolean value from it, return null if message is invalid
-const parseReqYesNo = async function (smsRequest) {
+const parseReqYesNo =  function (smsRequest) {
     if (smsRequest.toLowerCase().includes("yes")) {
         return true;
     } else if (smsRequest.toLowerCase().includes("no")) {
@@ -23,10 +23,10 @@ const parseReqYesNo = async function (smsRequest) {
     return null;
 }
 
-const parseReqSurvey = async function (smsRequest) {
+const parseReqSurvey =  function (smsRequest) {
     return;
 }
 
 
 
-module.export = {parseReqNumber,parseReqYesNo}
+module.exports = {parseReqNumber, parseReqYesNo, parseReqSurvey}
