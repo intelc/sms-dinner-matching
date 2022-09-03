@@ -37,7 +37,6 @@ const inputTimeSlot = async function (s, timeList) {
 }
 
 const createMatchRequest = async function (s) {
-
     var r = new MatchRequest({requestId: v4(), number: s.number, data: s.data});
 
     // match.matchReq(r);
@@ -46,7 +45,10 @@ const createMatchRequest = async function (s) {
 }
 
 const createAppointment = async function (request1, request2) {
-    var a = new Appointment({numbers: [request1.number, request2.number]});
+    var a = new Appointment({numbers: [request1.number, request2.number],
+                            
+                            });
+
     return a;
 }
 
