@@ -14,6 +14,6 @@ const sessionSchema = new mongoose.Schema({
 
 // sessionSchema.plugin(passportLocalMongoose);
 
-var session = mongoose.model('session', sessionSchema);
+const Session = mongoose.model('Session', sessionSchema);
 
-module.exports = session
+module.exports = Session

@@ -18,6 +18,6 @@ const requestSchema = new mongoose.Schema({
 
 requestSchema.plugin(passportLocalMongoose);
 
-var request = mongoose.model('request', sessionSchema);
+const MatchRequest = mongoose.model('MatchRequest', requestSchema);
 
-module.exports = request
+module.exports = MatchRequest
