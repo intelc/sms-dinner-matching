@@ -1,3 +1,5 @@
+var {locations, timeSlots} = require('./send.js');
+
 //take a message string and extract a list of unique single-digit integers from it
 const parseReqNumber =  function (message) {
     var numList = [];
