@@ -37,6 +37,7 @@ const inputTimeSlot = async function (s, timeList) {
 
 const createMatchRequest = async function (s) {
     var r = new MatchRequest({_id: v4(), number: s.number, data: s.data});
+    await r.save();
     // match.matchReq(r);
     return r;
 }
@@ -75,6 +76,7 @@ const handle = async function(from, smsRequest) {
             s.stage += 1; //move directly to stage 4
             var matchingSession = Session.findOne({number: matchingNumber});
             matchingSession.stage += 1; //move matching session to stage 4
+            await matchingSession.save();
             send.sendWaitingMatched(number, matchingSession.number);
             send.sendWaitingMatched(matchingSession.number, number);
         } else {

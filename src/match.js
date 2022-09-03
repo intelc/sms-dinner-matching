@@ -9,6 +9,8 @@ const match = function(request) {
     if (match) {
         request.matchingRequstID = match._id;
         match.matchingRequstID = request._id;
+        await match.save();
+        await request.save();
     } else {
         return 0;
     }
