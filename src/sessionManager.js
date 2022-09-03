@@ -5,22 +5,28 @@ const {parseReqNumber, parseReqYesNo,parseReqSurvey} = require("./msgParser");
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
     var s = new Session ({number: from, stage: 0});
-    s.save();
+    await s.save();
     return s;
 }
 
 const terminateSession = async function (from) {
+    var n = await Session.deleteMany({number: from});
+    console.log(n, " sessions terminated.")
     return;
 }
 
 //put in user location inputs, locList is int list of location user selected
 const inputLocation = async function(s, locList) {
-    return updated;
+    s.data.location = locList;
+    await s.save();
+    return;
 }
 
 //put in user time slot inputs, timeList is int list
 const inputTimeSlot = async function (s, timeList) {
-    return updated;
+    s.data.timeSlot = timeList;
+    await s.save();
+    return;
 }
 
 const createMatchRequest = async function (s) {
