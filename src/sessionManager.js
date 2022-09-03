@@ -1,12 +1,11 @@
 const Session = require("../schema/session")
-const Request = require("../schema/matchRequest");
+const MatchRequest = require("../schema/matchRequest");
 const {parseReqNumber, parseReqYesNo,parseReqSurvey} = require("./msgParser");
-
-
 
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
     var s = new Session ({number: from, stage: 0});
+    s.save();
     return s;
 }
 
@@ -25,7 +24,7 @@ const inputTimeSlot = async function (s, timeList) {
 }
 
 const createMatchRequest = async function (s) {
-    var r = new Request({_id: v4(), number: s.number, data: s.data});
+    var r = new MatchRequest({_id: v4(), number: s.number, data: s.data});
     match.matchReq(r);
     return r;
 }
@@ -34,7 +33,7 @@ const createMatchRequest = async function (s) {
 //return whether user response is valid
 const handle = async function(from, smsRequest) {
     const query = {number: from}
-    var s = await sessionCollection.findOne(query)
+    var s = await Session.findOne(query)
     if (!s) {
         s = initializeSession(from);
     }
@@ -80,6 +79,7 @@ const handle = async function(from, smsRequest) {
         recordSurvey(s, surveyRes);
         send.sendEnd(from);
     } else {
+        console.log("Error: illegal session state");
         return -1;
     }
     s.stage += 1;
