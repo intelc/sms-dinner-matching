@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 
 const requestSchema = new mongoose.Schema({
+    requestId: String,
     number:      { type: Number, required: true },
     date:        { type: Date, default: Date.now },
     data: {
