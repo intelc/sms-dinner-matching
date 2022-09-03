@@ -17,7 +17,7 @@ const match = async function(request) {
     } else {
         return 0;
     }
-    return match.number;
+    return match;
 }
 
 module.exports = match;

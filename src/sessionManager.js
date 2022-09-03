@@ -5,6 +5,7 @@ const match = require("./match");
 
 const send = require("./send");
 const {v4} = require('uuid');
+const Appointment = require("../schema/appointment");
 
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
@@ -44,6 +45,11 @@ const createMatchRequest = async function (s) {
     return r;
 }
 
+const createAppointment = async function (request1, request2) {
+    var a = new Appointment({numbers: [request1.number, request2.number]});
+    return a;
+}
+
 //move session to next stage; res: response
 //return whether user response is valid
 const handle = async function(from, smsRequest) {
@@ -73,8 +79,9 @@ const handle = async function(from, smsRequest) {
         }
         inputTimeSlot(s, timeList);
         var r = await createMatchRequest(s);
-        var matchingNumber = await match(r);
-        if (matchingNumber) {
+        var match = await match(r);
+        if (match) {
+            var matchingNumber = match.number
             s.stage += 1; //move directly to stage 4
             var matchingSession = await Session.findOne({number: matchingNumber});
             matchingSession.stage += 1; //move matching session to stage 4
