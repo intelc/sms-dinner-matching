@@ -62,8 +62,16 @@ const sendAskTime = function(number) {
   this.send(number, msg);
 }
 
+const sendLocError = function(number) {
+  send(number, "Sorry, we didn't understand your location preference. Try entering again. \nFor example, enter '123' for the first three locations.");
 
+}
 
-module.exports = [locations, timeSlots, send, sendAskLocation]
+const sendTimeError = function(number) {
+  send(number, "Sorry, we didn't understand your time preference. Try entering again. \nFor example, enter '123' for the first three time slots.");
+
+}
+
+module.exports = {locations, timeSlots, send, sendAskLocation,sendAskTime,sendLocError,sendTimeError};
 //exports.send = send;
 
