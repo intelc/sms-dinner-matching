@@ -1,4 +1,4 @@
-const session = require("./session")
+const session = require("../schema/session")
 
 //create a new session, number is user phone number, return session id = user number
 var initializeSession = function(number) {

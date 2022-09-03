@@ -9,12 +9,12 @@ const requestSchema = new mongoose.Schema({
         timeSlot: [Number]
     },
     //id of request this request is matched with, None when no match found
-    matchingRequestId: Number,
+    matchingRequestId: String,
     survey: {
         complete: Boolean,
         satisfaction: Number
     }
-  });
+  },{ collection: 'MatchRequests'});
 
 requestSchema.plugin(passportLocalMongoose);
 

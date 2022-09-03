@@ -30,6 +30,8 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "serve-favicon": "^2.5.0",
-    "twilio": "^3.81.0"
+    "twilio": "^3.81.0",
+    "uuid": "^8.3.2",
+    "uuidv4": "^6.2.13"
   }
 }
