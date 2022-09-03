@@ -68,7 +68,7 @@ const sendWaitingForMatch = function(number) {
 }
 
 const sendWaitingMatched = function(number, info) {
-  var msg = "We have found a match for you! Your match's name is " + info.name + ". Please reply with 'yes' to confirm your match, or 'no' to cancel your match." 
+  var msg = "We have found a match for you! Your match's number is " + info + ". Please reply with 'yes' to confirm your match, or 'no' to cancel your match." 
   this.send(number, msg);
 }
 

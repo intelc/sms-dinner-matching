@@ -1,6 +1,7 @@
-const Session = require("../schema/session")
+const Session = require("../schema/session");
 const MatchRequest = require("../schema/matchRequest");
 const {parseReqNumber, parseReqYesNo, parseReqSurvey} = require("./msgParser");
+const match = require("./match");
 
 const send = require("./send");
 const {v4} = require('uuid');
@@ -68,8 +69,17 @@ const handle = async function(from, smsRequest) {
             return -1;
         }
         inputTimeSlot(s, timeList);
-        createMatchRequest(s);
-        send.sendWaitingForMatch(from);
+        var r = createMatchRequest(s);
+        var matchingNumber = match(r);
+        if (matchingNumber) {
+            s.stage += 1; //move directly to stage 4
+            var matchingSession = Session.findOne({number: matchingNumber});
+            matchingSession.stage += 1; //move matching session to stage 4
+            send.sendWaitingMatched(number, matchingSession.number);
+            send.sendWaitingMatched(matchingSession.number, number);
+        } else {
+            send.sendWaitingForMatch(from);    
+        }
     } else if (s.stage == 3) { //match not found
         send.sendWaitingForMatch(from);
         return 0;
