@@ -1,6 +1,6 @@
 const Session = require("../schema/session")
 const Request = require("../schema/matchRequest");
-const {parseReqNumber, parseReqYesNo} = require("./msgParser");
+const {parseReqNumber, parseReqYesNo,parseReqSurvey} = require("./msgParser");
 
 
 

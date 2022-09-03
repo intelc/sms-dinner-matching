@@ -23,6 +23,10 @@ const parseReqYesNo = async function (smsRequest) {
     return null;
 }
 
+const parseReqSurvey = async function (smsRequest) {
+    return;
+}
+
 
 
 module.export = {parseReqNumber,parseReqYesNo}
