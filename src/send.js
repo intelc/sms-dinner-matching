@@ -1,7 +1,7 @@
 var config = require('../config');
 var client = require('twilio')(config.accountSid, config.authToken);
 
-var send = function(number,msg) {
+const send = function(number,msg) {
     console.log("trying to send");
     // Send the notification
     client.messages.create({
@@ -19,4 +19,6 @@ var send = function(number,msg) {
 //   });
 };
 
-exports.send = send;
+
+
+exports.send = sendAskLocation,sendAskTime,sendLocError,sendTimeError;
