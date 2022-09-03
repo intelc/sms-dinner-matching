@@ -82,6 +82,15 @@ const sendConfirmed = function(number) {
   this.send(number, msg);
 }
 
+const sendReminder = function(numbers, time, location) {  
+  //send a message to each number in numbers
+  numbers.forEach(function(number){
+    var msg = "Hi! This is a T-30 mins reminder that you have a dinner appointment at " + time + " at " + location + "."
+    send(number, msg);
+  })
+ 
+}
+
 
 const sendLocError = function(number) {
   send(number, "Sorry, we didn't understand your location preference. Try entering again. \nFor example, enter '123' for the first three locations.");
@@ -99,6 +108,6 @@ const sendSurveyError = function(number) {
   send(number, "Sorry, we didn't understand your response. Please enter '1' for 'yes', '2' for 'no', and '3' for 'unsure'.");
 }
 
-module.exports = {locations, timeSlots, send, sendAskLocation, sendAskTime, sendWaitingForMatch, sendWaitingMatched, sendEnd, sendConfirmed, sendLocError, sendTimeError, sendConfirmError, sendSurveyError};
+module.exports = {locations, timeSlots, send, sendAskLocation, sendAskTime, sendWaitingForMatch, sendWaitingMatched, sendEnd, sendConfirmed, sendLocError, sendTimeError, sendConfirmError, sendSurveyError,sendReminder};
 //exports.send = send;
 

@@ -14,6 +14,8 @@ var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var smsHandling = require('./routes/smsHandling');
+var debug = require('./routes/debug');
+var reminder = require('./src/reminder');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -25,6 +27,8 @@ mongoose.connect(MONGO_URI, {
     useUnifiedTopology: true
   })
 
+// Start the cron service to send reminders for appointments within 30 mins
+// reminder.start();
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -34,6 +38,7 @@ app.use(cookieParser());
 
 app.use('/', routes);
 app.use('/smsHandling', smsHandling);
+app.use('/debug', debug);
 
 
 // catch 404 and forward to error handler
