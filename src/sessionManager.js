@@ -1,14 +1,16 @@
 const Session = require("../schema/session")
 const MatchRequest = require("../schema/matchRequest");
-const {parseReqNumber, parseReqYesNo,parseReqSurvey} = require("./msgParser");
+const {parseReqNumber, parseReqYesNo, parseReqSurvey} = require("./msgParser");
 
 const send = require("./send");
-
+const {v4} = require('uuid');
 
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
+    console.log("new session created");
     var s = new Session ({number: from, stage: 0});
     await s.save();
+
     return s;
 }
 
@@ -21,14 +23,14 @@ const terminateSession = async function (from) {
 //put in user location inputs, locList is int list of location user selected
 const inputLocation = async function(s, locList) {
     s.data.location = locList;
-    await s.save();
+    // await s.save();
     return;
 }
 
 //put in user time slot inputs, timeList is int list
 const inputTimeSlot = async function (s, timeList) {
     s.data.timeSlot = timeList;
-    await s.save();
+    // await s.save();
     return;
 }
 
@@ -41,15 +43,18 @@ const createMatchRequest = async function (s) {
 //move session to next stage; res: response
 //return whether user response is valid
 const handle = async function(from, smsRequest) {
+
+    console.log("handle: ", from, smsRequest);
     const query = {number: from}
     var s = await Session.findOne(query)
     if (!s) {
-        s = initializeSession(from);
+        console.log("no session found, creating new session");
+        s = await initializeSession(from);
     }
     if (s.stage == 0) { //user sends initial text
         send.sendAskLocation(from);
     } else if (s.stage == 1) { //user sends location preference
-        var locList = parseResNumber(smsRequest);
+        var locList = parseReqNumber(smsRequest);
         if (!locList) {
             send.sendLocError(from);
             return -1;

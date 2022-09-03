@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// const passportLocalMongoose = require('passport-local-mongoose');
+
 
 const sessionSchema = new mongoose.Schema({
     number:      { type: Number, required: true },
@@ -12,7 +12,7 @@ const sessionSchema = new mongoose.Schema({
     requestId: String
   },{ collection: 'Sessions'});
 
-// sessionSchema.plugin(passportLocalMongoose);
+
 
 const Session = mongoose.model('Session', sessionSchema);
 
