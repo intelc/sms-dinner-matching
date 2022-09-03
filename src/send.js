@@ -1,6 +1,8 @@
 var config = require('../config');
 var client = require('twilio')(config.accountSid, config.authToken);
 
+
+
 const locations = { 1: "1920 Commons", 
                     2: "English House",
                     3: "Hill House", 
@@ -17,6 +19,7 @@ const timeSlots = { 1: "5:00 pm",
                   }
 
 var send = function(number,msg) {
+
     console.log("trying to send");
     // Send the notification
     client.messages.create({
@@ -33,6 +36,7 @@ var send = function(number,msg) {
     console.log("sent");
 //   });
 };
+
 
 const sendAskLocation = function(number) {
   var msg = "Welcome to the Penn dinner buddy matching system. Please enter your preferred location:\n";
@@ -62,3 +66,4 @@ const sendAskTime = function(number) {
 
 module.exports = [locations, timeSlots, send, sendAskLocation]
 //exports.send = send;
+
