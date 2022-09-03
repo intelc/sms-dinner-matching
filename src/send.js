@@ -1,23 +1,13 @@
 var config = require('../config');
 var client = require('twilio')(config.accountSid, config.authToken);
-// var Reservation = require('../models/reservation');
 
-var sendNotification = function(msg) {
-//   Reservation.find({status: 'pending'})
-//   .deepPopulate('property property.owner guest')
-//   .then(function (reservations) {
-//     if (reservations.length > 1) {
-//       return;
-//     }
-
-    // var reservation = reservations[0];
-    // var owner = reservation.property.owner;
-
+var send = function(number,msg) {
+    console.log("trying to send");
     // Send the notification
     client.messages.create({
-      to: "+12672391519",//phoneNumber(owner),
+      to: number,
       from: config.phoneNumber,
-      body: msg//buildMessage(reservation)
+      body: msg
     })
     .then(function(res) {
       console.log(res.body);
@@ -25,20 +15,8 @@ var sendNotification = function(msg) {
     .catch(function(err) {
       console.log(err);
     });
+    console.log("sent");
 //   });
 };
 
-var phoneNumber = function(owner) {
-  return "+" + owner.countryCode + owner.phoneNumber;
-};
-
-var buildMessage = function(reservation) {
-  var message = "You have a new reservation request from " + reservation.guest.username +
-    " for " + reservation.property.description + ":\n" +
-    reservation.message + "\n" +
-    "Reply accept or reject";
-
-  return message;
-};
-
-exports.sendNotification = sendNotification;
+exports.send = send;
