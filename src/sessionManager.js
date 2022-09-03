@@ -36,7 +36,7 @@ const inputTimeSlot = async function (s, timeList) {
 
 const createMatchRequest = async function (s) {
     var r = new MatchRequest({_id: v4(), number: s.number, data: s.data});
-    match.matchReq(r);
+    // match.matchReq(r);
     return r;
 }
 
@@ -69,7 +69,12 @@ const handle = async function(from, smsRequest) {
         }
         inputTimeSlot(s, timeList);
         createMatchRequest(s);
-    } else if (s.stage == 3) { //user sends RSVP message
+        send.sendWaitingForMatch(from);
+    } else if (s.stage == 3) { //match not found
+        send.sendWaitingForMatch(from);
+        return 0;
+    } else if (s.stage == 4) { //user sends RSVP message
+        
         var confirm = parseReqYesNo(smsRequest);
         if (confirm == null) {
             send.sendConfirmError(from);
@@ -82,9 +87,9 @@ const handle = async function(from, smsRequest) {
         } else {
             send.sendConfirmed(from);
         }
-    } else if (s.stage == 4) { //reminder
+    } else if (s.stage == 5) { //reminder
         //TODO
-    } else if (s.stage == 5) { //survey
+    } else if (s.stage == 6) { //survey
         var surveyRes = parseReqSurvey(smsRequest);
         if (!surveyRes) {
             send.sendSurveyError(from);

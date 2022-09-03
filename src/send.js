@@ -62,6 +62,27 @@ const sendAskTime = function(number) {
   this.send(number, msg);
 }
 
+const sendWaitingForMatch = function(number) {
+  var msg = "We are currently matching you with a dinner buddy. Please wait patiently for a few minutes. We will send you a message when we find a match for you."
+  this.send(number, msg);
+}
+
+const sendWaitingMatched = function(number, info) {
+  var msg = "We have found a match for you! Your match's name is " + info.name + ". Please reply with 'yes' to confirm your match, or 'no' to cancel your match." 
+  this.send(number, msg);
+}
+
+const sendEnd = function(number) {
+  var msg = "Thank you for using the Penn dinner buddy matching system. We hope you have a great dinner!"
+  this.send(number, msg);
+}
+
+const sendConfirmed = function(number) {  
+  var msg = "Thank you for confirming your match. We hope you have a great dinner!"
+  this.send(number, msg);
+}
+
+
 const sendLocError = function(number) {
   send(number, "Sorry, we didn't understand your location preference. Try entering again. \nFor example, enter '123' for the first three locations.");
 
@@ -78,6 +99,6 @@ const sendSurveyError = function(number) {
   send(number, "Sorry, we didn't understand your response. Please enter '1' for 'yes', '2' for 'no', and '3' for 'unsure'.");
 }
 
-module.exports = {locations, timeSlots, send, sendAskLocation,sendAskTime,sendLocError,sendTimeError};
+module.exports = {locations, timeSlots, send, sendAskLocation, sendAskTime, sendWaitingForMatch, sendWaitingMatched, sendEnd, sendConfirmed, sendLocError, sendTimeError, sendConfirmError, sendSurveyError};
 //exports.send = send;
 
