@@ -1,42 +1,12 @@
-const session = require("../schema/session")
-
-const { MongoClient } = require('mongodb');
-const request = require("../schema/matchRequest");
+const Session = require("../schema/session")
+const Request = require("../schema/matchRequest");
 const {parseReqNumber, parseReqYesNo} = require("./msgParser");
-// or as an es module:
-// import { MongoClient } from 'mongodb'
-
-// Connection URL
-const uri = 'mongodb://localhost:27017';
-const client = new MongoClient(uri);
-
-// Database Name
-const dbName = 'SMSDinnerMatch';
-
-var sessionCollection = null;
-
-async function connect() {
-  // Use connect method to connect to the server
-  await client.connect();
-  console.log('Connected successfully to MongoDB server');
-  const db = client.db(dbName);
-  sessionCollection = db.collection('Sessions');
-
-  // the following code examples can be pasted here...
-
-  return 'done.';
-}
-
-connect()
-  .then(console.log)
-  .catch(console.error)
-  .finally(() => client.close());
 
 
 
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
-    var s = new session ({number: from, stage: 0});
+    var s = new Session ({number: from, stage: 0});
     return s;
 }
 
@@ -55,7 +25,7 @@ const inputTimeSlot = async function (s, timeList) {
 }
 
 const createMatchRequest = async function (s) {
-    var r = new request({_id: v4(), number: s.number, data: s.data});
+    var r = new Request({_id: v4(), number: s.number, data: s.data});
     match.matchReq(r);
     return r;
 }
@@ -122,4 +92,4 @@ const handle = async function(from, smsRequest) {
 
 
 
-module.exports = [handle]
+module.exports = {handle}
