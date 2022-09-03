@@ -39,26 +39,26 @@ var send = function(number,msg) {
 
 
 const sendAskLocation = function(number) {
-  var msg = "Welcome to the Penn dinner buddy matching system. Please enter your preferred location:\n";
+  var msg = "Welcome to the Penn dinner buddy matching system. Please enter your preferred location:\n\n";
   for (key in locations) {
     msg += key
     msg += ". "
     msg += locations[key]
     msg += "\n"
   };
-  msg += "To enter multiple locations, simply enter multiple numbers."
+  msg += "\nTo enter multiple locations, simply enter multiple numbers (ex.134)."
   this.send(number, msg);
 }
 
 const sendAskTime = function(number) {
-  var msg = "Great! Now please enter your preferred time slots:\n";
+  var msg = "Great! Now please enter your preferred time slots:\n\n";
   for (key in timeSlots) {
     msg += key
     msg += ". "
     msg += timeSlots[key]
     msg += "\n"
   };
-  msg += "To enter multiple time slots, simply enter multiple numbers."
+  msg += "\nTo enter multiple time slots, simply enter multiple numbers (ex.134)."
   this.send(number, msg);
 }
 
