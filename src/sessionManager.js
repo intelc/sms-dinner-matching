@@ -4,6 +4,7 @@ const {parseReqNumber, parseReqYesNo, parseReqSurvey} = require("./msgParser");
 const match = require("./match");
 
 const send = require("./send");
+const {location, timeSlot} = require("./send.js");
 const {v4} = require('uuid');
 const Appointment = require("../schema/appointment");
 
@@ -75,14 +76,17 @@ const handle = async function(from, smsRequest) {
         send.sendAskLocation(from);
     } else if (s.stage == 1) { //user sends location preference
         var locList = parseReqNumber(smsRequest);
+        //filter locList to remove invalid inputs larger than the size of locations list
+        locList = locList.filter(x => x <= locations.length);
         if (!locList) {
             send.sendLocError(from);
             return -1;
         }
         inputLocation(s, locList);
-        send.sendAskTime(from);
+        send.sendAskTime(from, locList);
     } else if (s.stage == 2) { //user sends time preference
         var timeList = parseReqNumber(smsRequest);
+        timeList = timeList.filter(x => x <= timeSlots.length);
         if (!timeList) {
             send.sendTimeError(from);
             return -1;
