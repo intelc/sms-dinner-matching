@@ -59,19 +59,6 @@ const createMatchRequest = async function (s) {
     return r;
 }
 
-//returns an int list from user message if message is valid, return null if message is invalid
-const parseReqNumber = async function (smsRequest) {
-    return;
-}
-
-const parseReqYesNo = async function (smsRequest) {
-    return;
-}
-
-const parseReqSurvey = async function (smsRequest) {
-    return;
-}
-
 //move session to next stage; res: response
 //return whether user response is valid
 const handle = async function(from, smsRequest) {
