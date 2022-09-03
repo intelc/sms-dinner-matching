@@ -15,7 +15,7 @@ const requestSchema = new mongoose.Schema({
         complete: Boolean,
         satisfaction: Number
     },
-    appointmentID: String
+    appointmentId: String
   },{ collection: 'MatchRequests'});
 
 
