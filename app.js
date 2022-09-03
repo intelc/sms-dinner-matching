@@ -17,7 +17,7 @@ var routes = require('./routes/index');
 // var users = require('./routes/users');
 // var sessions = require('./routes/sessions');
 // var properties = require('./routes/properties');
-var matchingRequests = require('./routes/matchingRequests');
+var matchRequests = require('./routes/matchRequests');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -43,7 +43,7 @@ app.use(cookieParser());
 // app.use(flash());
 
 app.use('/', routes);
-app.use('/matchingRequests', matchingRequests);
+app.use('/matchRequests', matchRequests);
 // app.use('/users', users);
 // app.use('/properties', properties);
 // app.use('/reservations', reservations);
