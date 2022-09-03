@@ -2,6 +2,7 @@ const session = require("../schema/session")
 
 const { MongoClient } = require('mongodb');
 const request = require("../schema/matchRequest");
+const {parseReqNumber, parseReqYesNo} = require("./msgParser");
 // or as an es module:
 // import { MongoClient } from 'mongodb'
 
@@ -57,15 +58,6 @@ const createMatchRequest = async function (s) {
     var r = new request({_id: v4(), number: s.number, data: s.data});
     match.matchReq(r);
     return r;
-}
-
-//returns an int list from user message if message is valid, return null if message is invalid
-const parseReqNumber = async function (smsRequest) {
-    return;
-}
-
-const parseReqYesNo = async function (smsRequest) {
-    return;
 }
 
 //move session to next stage; res: response
