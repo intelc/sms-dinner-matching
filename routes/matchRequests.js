@@ -6,6 +6,7 @@ var router = express.Router();
 // var Reservation = require('../models/reservation');
 var Session = require('../schema/session');
 var notifier = require('../src/send');
+var sessionManager = require('../src/sessionManager');
 const {v4} = require('uuid');
 
 // POST: /reservations
@@ -46,59 +47,10 @@ router.post('/handle', twilio.webhook({validate: false}), function (req, res) {
   console.log(req.body)
   var smsResponse;
 
-  Session.findOne({number: from})
-  .then(function (host) {
-    if (host == null) {
-      console.log("create new user");
-        var message = `Hi ${String(from).replace("+1","")}, want to grab dinner with a schoolmate? Enter ur desired location`;
-        var newSession = new Session({
-          number:      from,
-          stage:       0,
-          requestId: v4()
-              });
-          
-        newSession.save();
-        respond(res, message);
-    }
-    else{
-      console.log("old user",host);
-      // var message = `Hi ${String(from).replace("+1","")},welcome back`
-      var message; 
-      switch(host.stage){
-        case 0:
-          //parse message
-          message = `you answered ${smsRequest}, enter time slot`;
-          // host.stage = 1;
-          // host.save()
-          stageHandler(host)
-
-          break;
-        case 1:
-          //parse message
-          message = `you answered ${smsRequest}, we are matching you with a schoolmate`;
-          stageHandler(host)
-          break;
-
-        default:
-          message = `something went wrong`;
-      }
-      respond(res, message);
-      
-    }
-   
-  })
-  .catch(function (err) {
-    respond(res, "err");
-      });
+  sessionManager.handle(from, smsRequest,res)
 
 });
 
-var respond = function(res, message) {
-  var messagingResponse = new MessagingResponse();
-  messagingResponse.message({}, message);
 
-  res.type('text/xml');
-  res.send(messagingResponse.toString());
-}
 
 module.exports = router;
