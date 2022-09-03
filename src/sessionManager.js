@@ -92,7 +92,7 @@ const handle = async function(from, smsRequest) {
         return -1;
     }
     s.stage += 1;
-    
+    await s.save();
     return 0;
 }
 
