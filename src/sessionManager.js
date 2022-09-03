@@ -2,6 +2,9 @@ const Session = require("../schema/session")
 const MatchRequest = require("../schema/matchRequest");
 const {parseReqNumber, parseReqYesNo,parseReqSurvey} = require("./msgParser");
 
+const send = require("./send");
+
+
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
     var s = new Session ({number: from, stage: 0});
