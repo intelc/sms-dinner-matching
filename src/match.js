@@ -8,8 +8,12 @@ const match = async function(request) {
     var match = await MatchRequest.findOne({"data.location": {$in: locList}, "data.timeSlot": {$in: timeList}})
     console.log("returned match:", match)
     if (match) {
-        request.matchingRequstID = match.requestId;
-        match.matchingRequstID = request.requestId;
+
+        request.matchingRequstID = match._id;
+        match.matchingRequstID = request._id;
+        await match.save();
+        await request.save();
+
     } else {
         return 0;
     }
