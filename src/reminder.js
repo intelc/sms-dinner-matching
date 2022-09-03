@@ -1,13 +1,13 @@
 var cron = require('node-cron');
-const Reservation = require("../schema/reservation");
+const Appointment = require("../schema/appointment");
 
 
-//reservation needs to have a "reminded"
+//appointment needs to have a "reminded"
 
 var task = cron.schedule('*/1 * * * *', function(){
   console.log('running a task every minute');
-    //filter Reservation collection to find all reservation that are due to expire in 30mins using mongoose aggregation query
-    Reservation.aggregate([
+    //filter Appointment collection to find all appointment that are due to expire in 30mins using mongoose aggregation query
+    Appointment.aggregate([
         {
             $match: {
                 $expr: {
@@ -15,13 +15,15 @@ var task = cron.schedule('*/1 * * * *', function(){
                         { $subtract: [ "$date", new Date() ] },
                         1800000
                     ]
-                }
+                }, reminded: false
             }
         }
-    ]).then(function(reservations){
-        //for each reservation, send a reminder to the user
-        reservations.forEach(function(reservation){
-            
+    ]).then(function(appointments){
+        //for each appointment, send a reminder to the user
+        appointments.forEach(function(appointment){
+            //update appointment.reminded to true
+            appointment.reminded = true;
+            appointment.save();
         })
     }
     )
