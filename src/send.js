@@ -50,8 +50,16 @@ const sendAskLocation = function(number) {
   this.send(number, msg);
 }
 
-const sendAskTime = function(number) {
-  var msg = "Great! Now please enter your preferred time slots:\n\n";
+const sendAskTime = function(number, loclist) {
+
+  var msg = "Great! You selected:\n";
+  for (key in loclist) {
+    msg += key
+    msg += ". "
+    msg += loclist[key]
+    msg += "\n"
+  };
+  msg = msg + "Now please enter your preferred time slots:\n\n"
   for (key in timeSlots) {
     msg += key
     msg += ". "
