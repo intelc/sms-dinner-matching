@@ -14,7 +14,8 @@ const requestSchema = new mongoose.Schema({
     survey: {
         complete: Boolean,
         satisfaction: Number
-    }
+    },
+    appointmentID: String
   },{ collection: 'MatchRequests'});
 
 
