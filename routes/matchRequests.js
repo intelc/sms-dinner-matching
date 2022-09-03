@@ -4,8 +4,9 @@ var express = require('express');
 var router = express.Router();
 // var Property = require('../models/property');
 // var Reservation = require('../models/reservation');
-// var User = require('../models/user');
+var Session = require('../schema/session');
 var notifier = require('../src/send');
+const {v4} = require('uuid');
 
 // POST: /reservations
 // This first method is for server initiated massages which are 
@@ -45,29 +46,51 @@ router.post('/handle', twilio.webhook({validate: false}), function (req, res) {
   console.log(req.body)
   var smsResponse;
 
-//   User.findOne({phoneNumber: from})
-//   .then(function (host) {
-//     return Reservation.findOne({status: 'pending'});
-//   })
-//   .then(function (reservation) {
-//     if (reservation === null) {
-//       throw 'No pending reservations';
-//     }
-//     reservation.status = smsRequest.toLowerCase() === "accept" ? "confirmed" : "rejected";
-//     return reservation.save();
-//   })
-//   .then(function (reservation) {
-//     var message = "You have successfully " + reservation.status + " the reservation";
-//     respond(res, message);
-//   })
-//   .catch(function (err) {
-//     var message = "Sorry, it looks like you do not have any reservations to respond to";
-//     respond(res, message);
-//   });
-// respond(res, "hello");
-// notifier.sendNotification();
-respond(res, `The following message has been received by SMS bot: ${smsRequest}`);
-res.send("/handle")
+  Session.findOne({number: from})
+  .then(function (host) {
+    if (host == null) {
+      console.log("create new user");
+        var message = `Hi ${String(from).replace("+1","")}, want to grab dinner with a schoolmate? Enter ur desired location`;
+        var newSession = new Session({
+          number:      from,
+          stage:       0,
+          requestId: v4()
+              });
+          
+        newSession.save();
+        respond(res, message);
+    }
+    else{
+      console.log("old user",host);
+      // var message = `Hi ${String(from).replace("+1","")},welcome back`
+      var message; 
+      switch(host.stage){
+        case 0:
+          //parse message
+          message = `you answered ${smsRequest}, enter time slot`;
+          // host.stage = 1;
+          // host.save()
+          stageHandler(host)
+
+          break;
+        case 1:
+          //parse message
+          message = `you answered ${smsRequest}, we are matching you with a schoolmate`;
+          stageHandler(host)
+          break;
+
+        default:
+          message = `something went wrong`;
+      }
+      respond(res, message);
+      
+    }
+   
+  })
+  .catch(function (err) {
+    respond(res, "err");
+      });
+
 });
 
 var respond = function(res, message) {

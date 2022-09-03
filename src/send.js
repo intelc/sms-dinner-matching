@@ -2,7 +2,7 @@ var config = require('../config');
 var client = require('twilio')(config.accountSid, config.authToken);
 // var Reservation = require('../models/reservation');
 
-var sendNotification = function() {
+var sendNotification = function(msg) {
 //   Reservation.find({status: 'pending'})
 //   .deepPopulate('property property.owner guest')
 //   .then(function (reservations) {
@@ -17,7 +17,7 @@ var sendNotification = function() {
     client.messages.create({
       to: "+12672391519",//phoneNumber(owner),
       from: config.phoneNumber,
-      body: "test message from server"//buildMessage(reservation)
+      body: msg//buildMessage(reservation)
     })
     .then(function(res) {
       console.log(res.body);

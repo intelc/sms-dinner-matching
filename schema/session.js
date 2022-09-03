@@ -9,8 +9,8 @@ const sessionSchema = new mongoose.Schema({
         location: [Number],
         timeSlot: [Number]
     },
-    requestId: Number
-  });
+    requestId: String
+  },{ collection: 'Sessions'});
 
 // sessionSchema.plugin(passportLocalMongoose);
 

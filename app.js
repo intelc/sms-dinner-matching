@@ -22,6 +22,12 @@ var matchRequests = require('./routes/matchRequests');
 var app = express();
 const port = process.env.PORT || 3000;
 
+const MONGO_URI = process.env.MONGODB_URI || `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.gwu0i.mongodb.net/SMSDinnerMatch?retryWrites=true&w=majority`
+
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
 // view engine setup -> WE DONT NEED A FRONT END
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'pug');
