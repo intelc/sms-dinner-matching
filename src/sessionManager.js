@@ -46,11 +46,14 @@ const createMatchRequest = async function (s) {
 const createAppointment = async function (request1, request2) {
     var commonLocation = request1.data.location.filter(x => request2.data.location.includes(x))[0];
     var commonTime = request1.data.timeSlot.filter(x => request2.data.timeSlot.includes(x))[0];
+    var baseDate = Date.now();
+    baseDate.setHours(5);
+    var appDate = baseDate + (commonTime - 1) * 1800000;
     var a = new Appointment({   appointmentId: v4(),
                                 requests: [request1.requestId, request2.requestId],
                                 numbers: [request1.number, request2.number],
                                 location: commonLocation,
-                                time: commonTime
+                                time: appDate
                             });
     request1.appointmentId = a.appointmentId;
     request2.appointmentId = a.appointmentId;

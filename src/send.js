@@ -70,7 +70,7 @@ const sendWaitingForMatch = function(number) {
 const sendWaitingMatched = function(number, matchNumber, appointment) {
   var location = locations[appointment.location]
   var time = timeSlots[appointment.time]
-  var msg = "We have found a match for you! Your match's number is " + matchNumber + ". Your dinner location is " + location + ", and the time to meet is " + time + ". Please reply with 'yes' to confirm your match, or 'no' to cancel your match." 
+  var msg = "We have found a match for you! Your match's number is " + matchNumber + ". Your dinner location is " + location + ", and the time to meet is " + time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, timeZone: 'America/New_York' }) + ". Please reply with 'yes' to confirm your match, or 'no' to cancel your match." 
   this.send(number, msg);
 }
 
