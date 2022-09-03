@@ -10,6 +10,6 @@ const appointmentSchema = new mongoose.Schema({
     reminded:    { type: Boolean, default: false}
   },{ collection: 'Appointments'});
 
-const Appointment = mongoose.model('Appointment', requestSchema);
+const Appointment = mongoose.model('Appointment', appointmentSchema);
 
 module.exports = Appointment
