@@ -17,10 +17,17 @@ const requestSchema = new mongoose.Schema({
         satisfaction: Number
     },
     appointmentId: String
-  },{ collection: 'MatchRequests'});
+  });
 
 
 
 const MatchRequest = mongoose.model('MatchRequest', requestSchema);
+const MatchRequestArc = mongoose.model('MatchRequestArc', requestSchema);
 
-module.exports = MatchRequest
+const moveMatchRequestToArchive = async function(request) {
+    var arc = new MatchRequestArc(request.toJSON());
+    await arc.save();
+    await MatchRequest.deleteOne({requestId: request.requestId});
+}
+
+module.exports = {MatchRequest, MatchRequestArc, moveMatchRequestToArchive}

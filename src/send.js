@@ -54,9 +54,9 @@ const sendAskTime = function(number, loclist) {
 
   var msg = "Great! You selected:\n";
   for (key in loclist) {
-    msg += key
-    msg += ". "
     msg += loclist[key]
+    msg += ". "
+    msg += locations[loclist[key]]
     msg += "\n"
   };
   msg = msg + "Now please enter your preferred time slots:\n\n"

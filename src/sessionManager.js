@@ -1,12 +1,12 @@
 const Session = require("../schema/session");
-const MatchRequest = require("../schema/matchRequest");
+const {MatchRequest} = require("../schema/matchRequest");
 const {parseReqNumber, parseReqYesNo, parseReqSurvey} = require("./msgParser");
 const match = require("./match");
 
 const send = require("./send");
 const {locations, timeSlots} = require("./send.js");
 const {v4} = require('uuid');
-const Appointment = require("../schema/appointment");
+const {Appointment} = require("../schema/appointment");
 
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
@@ -71,7 +71,9 @@ const createAppointment = async function (request1, request2) {
 //restore the other involved user's session to stage 3 and requests to unmatched
 const cancelAppointment = async function (session) {
     const request = await MatchRequest.findOne({number: session.number});
-    const matchedRequest = await MatchRequest.findOne({requestId: request.matchedRequestId});
+    console.log("Request: ",request)
+    const matchedRequest = await MatchRequest.findOne({requestId: request.matchingRequestId});
+    console.log("matchedRequest: ", matchedRequest);
     const matchedSession = await Session.findOne({number: matchedRequest.number});
     const appointment = await Appointment.findOne({appointmentId: request.appointmentId});
     
@@ -82,7 +84,9 @@ const cancelAppointment = async function (session) {
     matchedRequest.depopulate(['matchingRequestId', 'appointmentId']);
     matchedRequest.confirmed = false;
     matchedSession.stage = 3;
-    attemptMatch(matchedSession);
+    await matchedRequest.save();
+    await matchedSession.save();
+    attemptMatch(matchedSession, matchedRequest);
     return;
 }
 
@@ -90,13 +94,18 @@ const cancelAppointment = async function (session) {
 // send confirmation message
 const confirmAppointment = async function (session) {
     const request = await MatchRequest.findOne({number: session.number});
+    console.log(request)
     const appointment = await Appointment.findOne({appointmentId: request.appointmentId});
 
     request.confirmed = true;
+    await request.save();
     const nTotal = appointment.requests.length;
-    const nConfirmed = 0;
-    for (requestId in appointment.requests) {
-        const req = await MatchRequest.findOne({requestId: requestId});
+    var nConfirmed = 0;
+    for (var i =0; i< appointment.requests.length; i++) {
+        var rId = appointment.requests[i];
+        console.log("requestId: ", rId);
+        const req = await MatchRequest.findOne({requestId: rId});
+        console.log(req)
         if (req.confirmed == true) nConfirmed += 1;
     }
 
@@ -104,7 +113,8 @@ const confirmAppointment = async function (session) {
 
     if (nConfirmed == nTotal) appointment.confirmed = true;
 
-    for (requestId in appointment.requests) {
+    for (var i =0; i< appointment.requests.length; i++) {
+        var requestId = appointment.requests[i];
         const req = await MatchRequest.findOne({requestId: requestId});
         if (nConfirmed == nTotal) {
             send.sendAppointmentConfirmed(req.number);
@@ -124,7 +134,12 @@ const attemptMatch = async function (session, request) {
         session.stage += 1; //move directly to stage 4
         var matchingSession = await Session.findOne({number: matchingNumber});
         matchingSession.stage += 1; //move matching session to stage 4
+        request.matchingRequestId = matched.requestId;
+        matched.matchingRequestId = request.requestId;
+        await request.save();
+        await matched.save();
         await matchingSession.save();
+        await session.save();
 
         var appointment = await createAppointment(request, matched);
 
@@ -135,6 +150,7 @@ const attemptMatch = async function (session, request) {
         send.sendWaitingForMatch(from);    
     }
     return;
+
 }
 
 //move session to next stage; res: response
@@ -153,7 +169,8 @@ const handle = async function(from, smsRequest) {
     } else if (s.stage == 1) { //user sends location preference
         var locList = parseReqNumber(smsRequest);
         //filter locList to remove invalid inputs larger than the size of locations list
-        locList = locList.filter(x => x <= locations.length);
+        locList = locList.filter(x => x <= Object.keys(locations).length);
+        console.log("locList: ", locList);
         if (!locList || locList.length < 1) {
             send.sendLocError(from);
             return -1;
@@ -162,15 +179,15 @@ const handle = async function(from, smsRequest) {
         send.sendAskTime(from, locList);
     } else if (s.stage == 2) { //user sends time preference
         var timeList = parseReqNumber(smsRequest);
-        timeList = timeList.filter(x => x <= timeSlots.length);
-        if (!timeList || locList.length < 1) {
+        timeList = timeList.filter(x => x <= Object.keys(timeSlots).length);
+        if (!timeList || timeList.length < 1) {
             send.sendTimeError(from);
             return -1;
         }
         await inputTimeSlot(s, timeList);
         var r = await createMatchRequest(s);
         attemptMatch(s, r);
-
+        console.log("request created: ", s.stage);
     } else if (s.stage == 3) { //match not found
         send.sendWaitingForMatch(from);
         return 0;

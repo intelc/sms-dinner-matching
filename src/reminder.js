@@ -1,5 +1,5 @@
 var cron = require('node-cron');
-const Appointment = require("../schema/appointment");
+const {Appointment} = require("../schema/appointment");
 var send = require('../src/send');
 
 //appointment needs to have a "reminded"

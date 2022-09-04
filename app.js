@@ -16,6 +16,7 @@ var routes = require('./routes/index');
 var smsHandling = require('./routes/smsHandling');
 var debug = require('./routes/debug');
 var reminder = require('./src/reminder');
+var dailyPurge = require('./src/dailyPurge');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -29,6 +30,7 @@ mongoose.connect(MONGO_URI, {
 
 // Start the cron service to send reminders for appointments within 30 mins
 // reminder.start();
+dailyPurge.start();
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));

@@ -10,7 +10,7 @@ const sessionSchema = new mongoose.Schema({
         timeSlot: [Number]
     },
     requestId: String
-  },{ collection: 'Sessions'});
+  });
 
 
 
