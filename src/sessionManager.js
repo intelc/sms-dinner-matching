@@ -81,7 +81,7 @@ const handle = async function(from, smsRequest) {
         var locList = parseReqNumber(smsRequest);
         //filter locList to remove invalid inputs larger than the size of locations list
         locList = locList.filter(x => x <= locations.length);
-        if (!locList) {
+        if (!locList || locList.length < 1) {
             send.sendLocError(from);
             return -1;
         }
@@ -90,7 +90,7 @@ const handle = async function(from, smsRequest) {
     } else if (s.stage == 2) { //user sends time preference
         var timeList = parseReqNumber(smsRequest);
         timeList = timeList.filter(x => x <= timeSlots.length);
-        if (!timeList) {
+        if (!timeList || locList.length < 1) {
             send.sendTimeError(from);
             return -1;
         }
