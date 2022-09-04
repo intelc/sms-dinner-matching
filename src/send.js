@@ -132,8 +132,12 @@ const sendSurveyError = function(number) {
   send(number, "Sorry, we didn't understand your response. Please enter '1' for 'yes', '2' for 'no', and '3' for 'unsure'.");
 }
 
+const sendInProgressError = function(number) {
+  send(number, "You have a dinner appointment in progress. If you want to get in touch with your dinner buddy, you can directly text their number!");
+}
+
 module.exports = {locations, timeSlots, send, sendAskLocation, sendAskTime, sendWaitingForMatch, 
   sendWaitingMatched, sendEnd, sendConfirmed, sendOtherConfirmed, sendAppointmentConfirmed, 
-  sendCancelMessage, sendLocError, sendTimeError, sendConfirmError, sendSurveyError,sendReminder};
+  sendCancelMessage, sendLocError, sendTimeError, sendConfirmError, sendSurveyError,sendReminder, sendInProgressError};
 //exports.send = send;
 

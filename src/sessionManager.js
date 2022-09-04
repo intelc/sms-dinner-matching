@@ -189,8 +189,9 @@ const handle = async function(from, smsRequest) {
         } else {
             confirmAppointment(s);
         }
-    } else if (s.stage == 5) { //reminder
-        //TODO
+    } else if (s.stage == 5) { //Post RSVP, reminder stage; server not expecting anything from user
+        send.sendInProgressError(from);
+        return 0;
     } else if (s.stage == 6) { //survey
         var surveyRes = parseReqSurvey(smsRequest);
         if (!surveyRes) {
