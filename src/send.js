@@ -88,16 +88,18 @@ const sendEnd = function(number) {
 }
 
 const sendConfirmed = function(number, confirmed, total) {  
-  var msg = "Thank you for confirming your match. We hope you have a great dinner!"
+  var msg = "Thank you for confirming your match. We hope you have a great dinner!\n Currently, " + confirmed + " out of " + total + " members have confirmed the match."
   this.send(number, msg);
 }
 
 const sendOtherConfirmed = function(number, confirmed, total) {  
-  //TODO
+  var msg = "Someone in your dinner match has just confirmed!\n Currently, " + confirmed + " out of " + total + " members have confirmed the match."
+  this.send(number, msg);
 }
 
-const sendAppointmentConfirmed = function(number, confirmed, total) {
-  //TODO
+const sendAppointmentConfirmed = function(number) {
+  var msg = "Your dinner match has been confirmed! Please meet with your matched buddy on time."
+  this.send(number, msg);
 }
 
 const sendReminder = function(numbers, time, location) {  
@@ -110,7 +112,8 @@ const sendReminder = function(numbers, time, location) {
 }
 
 const sendCancelMessage = function(number) {
-  //TODO
+  var msg = "Unfortunately, your matched buddy didn't confirm this dinner. We are now trying to match you with someone else. You'll receive a message when we find another match!"
+  this.send(number, msg);
 }
 
 const sendLocError = function(number) {
