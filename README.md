@@ -1,11 +1,14 @@
 # sms-dinner-matching
 Text anything to (814)885-4058 to try our app!
 
+!["pic1"](/public/pennapps1.png)
 ## Inspiration
 For many college students, finding time to socialize and make new friends is hard. Everyone's schedule seems perpetually busy, and arranging a dinner chat with someone you know can be a hard and unrewarding task. At the same time, however, having dinner alone is definitely not a rare thing. We've probably all had the experience of having social energy on a particular day, but it's too late to put anything on the calendar. Our SMS dinner matching project exactly aims to **address the missed socializing opportunities in impromptu same-day dinner arrangements**. Starting from a basic dining-hall dinner matching tool for Penn students only, we **envision an event-centered, multi-channel social platform** that would make organizing events among friend groups, hobby groups, and nearby strangers effortless and sustainable in the long term for its users.
 
+!["pic2"](/public/pennapps2.png)
 ## What it does
 Our current MVP, built entirely within the timeframe of this hackathon, allows users to interact with our web server via **SMS text messages** and get **matched to other users for dinner** on the same day based on dining preferences and time availabilities.
+!["pic3"](/public/pennapps3.png)
 ### The user journey:
 1. User texts anything to our SMS number
 2. Server responds with a welcome message and lists out Penn's 5 dining halls for the user to choose from
@@ -18,6 +21,8 @@ Our current MVP, built entirely within the timeframe of this hackathon, allows u
 10. If both users in the match confirm, the server sends a final dinner arrangement confirmed message to both users
 11. If a user decides to decline, a message will be sent to the other user that the server is working on making a different match
 12. 30 minutes before the arranged time, the server sends each user a reminder
+
+!["pic4"](/public/pennapps4.png)
 ###Other notable backend features
 1. The server conducts user input validation for each user text to the server; if the user input is invalid, it sends an error message to the user asking the user to enter again
 2. The database maintains all requests and dinner matches made on that day; at 12:00 am each day, the server moves all requests and matches to a separate archive database
