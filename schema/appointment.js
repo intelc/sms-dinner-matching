@@ -9,8 +9,17 @@ const appointmentSchema = new mongoose.Schema({
     location:    { type: String, required: true},
     reminded:    { type: Boolean, default: false},
     confirmed:   { type: Boolean, default: false}
-  },{ collection: 'Appointments'});
+  });
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 
-module.exports = Appointment
+const AppointmentArc = mongoose.model('AppointmentArc', appointmentSchema);
+
+const moveAppointmentToArchive = async function(appointment) {
+    var arc = new AppointmentArc(appointment.toJSON());
+    await arc.save();
+    await Appointment.deleteOne({appointmentId: appointment.appointmentId});
+}
+
+
+module.exports = {Appointment, AppointmentArc, moveAppointmentToArchive}

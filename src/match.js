@@ -1,4 +1,4 @@
-const MatchRequest = require("../schema/matchRequest");
+const {MatchRequest} = require("../schema/matchRequest");
 
 const match = async function(request) {
     var locList = request.data.location;

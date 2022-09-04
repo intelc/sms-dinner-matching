@@ -4,7 +4,8 @@ var router = express.Router();
 // var Property = require('../models/property');
 // var Reservation = require('../models/reservation');
 var Session = require('../schema/session');
-var Appointment = require('../schema/appointment');
+var {Appointment} = require('../schema/appointment');
+var {MatchRequest} = require('../schema/matchRequest');
 var {send} = require('../src/send');
 var sessionManager = require('../src/sessionManager');
 var {v4} = require('uuid');
@@ -28,6 +29,15 @@ router.get('/addAppointments', function (req, res) {
     a.save();
     res.send("Appointment added");
    
+})
+
+router.get('/purge', async function (req, res) {
+    await Session.deleteMany({});
+    await Appointment.deleteMany({});
+    await MatchRequest.deleteMany({}) ;
+   
+   res.send("All deleted+");
+  
 })
   
 module.exports = router;
