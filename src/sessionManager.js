@@ -4,7 +4,7 @@ const {parseReqNumber, parseReqYesNo, parseReqSurvey} = require("./msgParser");
 const match = require("./match");
 
 const send = require("./send");
-const {location, timeSlot} = require("./send.js");
+const {locations, timeSlots} = require("./send.js");
 const {v4} = require('uuid');
 const Appointment = require("../schema/appointment");
 
@@ -47,14 +47,17 @@ const createMatchRequest = async function (s) {
 const createAppointment = async function (request1, request2) {
     var commonLocation = request1.data.location.filter(x => request2.data.location.includes(x))[0];
     var commonTime = request1.data.timeSlot.filter(x => request2.data.timeSlot.includes(x))[0];
-    var baseDate = Date.now();
-    baseDate.setHours(5);
-    var appDate = baseDate + (commonTime - 1) * 1800000;
+    var baseDate = new Date();
+    baseDate.setHours(17, 0, 0, 0);
+    console.log("commontime: ", commonTime);
+    // var appDate = baseDate + (commonTime - 1) * 1800000;
+    baseDate.setMinutes(baseDate.getMinutes() + (commonTime - 1) * 30);
+    // console.log("appDate: ", appDate);
     var a = new Appointment({   appointmentId: v4(),
                                 requests: [request1.requestId, request2.requestId],
                                 numbers: [request1.number, request2.number],
                                 location: commonLocation,
-                                time: appDate
+                                time: baseDate
                             });
     request1.appointmentId = a.appointmentId;
     request2.appointmentId = a.appointmentId;
@@ -85,7 +88,7 @@ const handle = async function(from, smsRequest) {
             send.sendLocError(from);
             return -1;
         }
-        inputLocation(s, locList);
+        await inputLocation(s, locList);
         send.sendAskTime(from, locList);
     } else if (s.stage == 2) { //user sends time preference
         var timeList = parseReqNumber(smsRequest);
@@ -94,17 +97,17 @@ const handle = async function(from, smsRequest) {
             send.sendTimeError(from);
             return -1;
         }
-        inputTimeSlot(s, timeList);
+        await inputTimeSlot(s, timeList);
         var r = await createMatchRequest(s);
-        var match = await match(r);
-        if (match) {
-            var matchingNumber = match.number
+        var matched = await match(r);
+        if (matched) {
+            var matchingNumber = matched.number
             s.stage += 1; //move directly to stage 4
             var matchingSession = await Session.findOne({number: matchingNumber});
             matchingSession.stage += 1; //move matching session to stage 4
             await matchingSession.save();
 
-            var appointment = await createAppointment(r, match);
+            var appointment = await createAppointment(r, matched);
 
             send.sendWaitingMatched(from, matchingSession.number, appointment);
             send.sendWaitingMatched(matchingSession.number, from, appointment);
@@ -144,6 +147,7 @@ const handle = async function(from, smsRequest) {
         return -1;
     }
     s.stage += 1;
+    console.log("saved")
     await s.save();
     return 0;
 }
