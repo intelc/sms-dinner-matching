@@ -87,9 +87,17 @@ const sendEnd = function(number) {
   this.send(number, msg);
 }
 
-const sendConfirmed = function(number) {  
+const sendConfirmed = function(number, confirmed, total) {  
   var msg = "Thank you for confirming your match. We hope you have a great dinner!"
   this.send(number, msg);
+}
+
+const sendOtherConfirmed = function(number, confirmed, total) {  
+  //TODO
+}
+
+const sendAppointmentConfirmed = function(number, confirmed, total) {
+  //TODO
 }
 
 const sendReminder = function(numbers, time, location) {  
@@ -101,6 +109,9 @@ const sendReminder = function(numbers, time, location) {
  
 }
 
+const sendCancelMessage = function(number) {
+  //TODO
+}
 
 const sendLocError = function(number) {
   send(number, "Sorry, we didn't understand your location preference. Try entering again. \nFor example, enter '123' for the first three locations.");
@@ -118,6 +129,8 @@ const sendSurveyError = function(number) {
   send(number, "Sorry, we didn't understand your response. Please enter '1' for 'yes', '2' for 'no', and '3' for 'unsure'.");
 }
 
-module.exports = {locations, timeSlots, send, sendAskLocation, sendAskTime, sendWaitingForMatch, sendWaitingMatched, sendEnd, sendConfirmed, sendLocError, sendTimeError, sendConfirmError, sendSurveyError,sendReminder};
+module.exports = {locations, timeSlots, send, sendAskLocation, sendAskTime, sendWaitingForMatch, 
+  sendWaitingMatched, sendEnd, sendConfirmed, sendOtherConfirmed, sendAppointmentConfirmed, 
+  sendCancelMessage, sendLocError, sendTimeError, sendConfirmError, sendSurveyError,sendReminder};
 //exports.send = send;
 

@@ -9,6 +9,7 @@ const requestSchema = new mongoose.Schema({
         location: [Number],
         timeSlot: [Number]
     },
+    confirmed:    { type: Boolean, default: false},
     //id of request this request is matched with, None when no match found
     matchingRequestId: {type: String},
     survey: {

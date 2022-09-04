@@ -7,7 +7,8 @@ const appointmentSchema = new mongoose.Schema({
     requests:    { type: [String], required: true},
     time:        { type: Date, required: true},
     location:    { type: String, required: true},
-    reminded:    { type: Boolean, default: false}
+    reminded:    { type: Boolean, default: false},
+    confirmed:   { type: Boolean, default: false}
   },{ collection: 'Appointments'});
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);

@@ -19,7 +19,7 @@ const initializeSession = async function(from) {
 
 const terminateSession = async function (from) {
     var n = await Session.deleteMany({number: from});
-    console.log(n, " sessions terminated.")
+    console.log(n, " session(s) terminated.")
     return;
 }
 
@@ -67,6 +67,76 @@ const createAppointment = async function (request1, request2) {
     return a;
 }
 
+//delete cancelling users' match request, delete appointment
+//restore the other involved user's session to stage 3 and requests to unmatched
+const cancelAppointment = async function (session) {
+    const request = await MatchRequest.findOne({number: session.number});
+    const matchedRequest = await MatchRequest.findOne({requestId: request.matchedRequestId});
+    const matchedSession = await Session.findOne({number: matchedRequest.number});
+    const appointment = await Appointment.findOne({appointmentId: request.appointmentId});
+    
+    await request.remove();
+    await appointment.remove();
+
+    send.sendCancelMessage(matchedRequest.number);
+    matchedRequest.depopulate(['matchingRequestId', 'appointmentId']);
+    matchedRequest.confirmed = false;
+    matchedSession.stage = 3;
+    attemptMatch(matchedSession);
+    return;
+}
+
+// set request state to confirmed, if all parties confirmed, set appointment to confirmed
+// send confirmation message
+const confirmAppointment = async function (session) {
+    const request = await MatchRequest.findOne({number: session.number});
+    const appointment = await Appointment.findOne({appointmentId: request.appointmentId});
+
+    request.confirmed = true;
+    const nTotal = appointment.requests.length;
+    const nConfirmed = 0;
+    for (requestId in appointment.requests) {
+        const req = await MatchRequest.findOne({requestId: requestId});
+        if (req.confirmed == true) nConfirmed += 1;
+    }
+
+    send.sendConfirmed(session.number, nConfirmed, nTotal);
+
+    if (nConfirmed == nTotal) appointment.confirmed = true;
+
+    for (requestId in appointment.requests) {
+        const req = await MatchRequest.findOne({requestId: requestId});
+        if (nConfirmed == nTotal) {
+            send.sendAppointmentConfirmed(req.number);
+        } else {
+            if (req.number != request.number) send.sendOtherConfirmed(req.number, nConfirmed, nTotal);
+        }        
+    }
+
+    return;
+}
+
+const attemptMatch = async function (session, request) {
+    var from = request.number
+    var matched = await match(request);
+    if (matched) {
+        var matchingNumber = matched.number
+        session.stage += 1; //move directly to stage 4
+        var matchingSession = await Session.findOne({number: matchingNumber});
+        matchingSession.stage += 1; //move matching session to stage 4
+        await matchingSession.save();
+
+        var appointment = await createAppointment(request, matched);
+
+        send.sendWaitingMatched(from, matchingSession.number, appointment);
+        send.sendWaitingMatched(matchingSession.number, from, appointment);
+
+    } else {
+        send.sendWaitingForMatch(from);    
+    }
+    return;
+}
+
 //move session to next stage; res: response
 //return whether user response is valid
 const handle = async function(from, smsRequest) {
@@ -99,22 +169,8 @@ const handle = async function(from, smsRequest) {
         }
         await inputTimeSlot(s, timeList);
         var r = await createMatchRequest(s);
-        var matched = await match(r);
-        if (matched) {
-            var matchingNumber = matched.number
-            s.stage += 1; //move directly to stage 4
-            var matchingSession = await Session.findOne({number: matchingNumber});
-            matchingSession.stage += 1; //move matching session to stage 4
-            await matchingSession.save();
+        attemptMatch(s, r);
 
-            var appointment = await createAppointment(r, matched);
-
-            send.sendWaitingMatched(from, matchingSession.number, appointment);
-            send.sendWaitingMatched(matchingSession.number, from, appointment);
-
-        } else {
-            send.sendWaitingForMatch(from);    
-        }
     } else if (s.stage == 3) { //match not found
         send.sendWaitingForMatch(from);
         return 0;
@@ -126,11 +182,12 @@ const handle = async function(from, smsRequest) {
             return -1;
         }
         if (confirm == 0) {
+            cancelAppointment(s);
             send.sendEnd(from);
             terminateSession(from);
             return 0;
         } else {
-            send.sendConfirmed(from);
+            confirmAppointment(s);
         }
     } else if (s.stage == 5) { //reminder
         //TODO
