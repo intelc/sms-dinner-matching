@@ -10,7 +10,7 @@ const requestSchema = new mongoose.Schema({
         timeSlot: [Number]
     },
     //id of request this request is matched with, None when no match found
-    matchingRequestId: String,
+    matchingRequestId: {type: String},
     survey: {
         complete: Boolean,
         satisfaction: Number

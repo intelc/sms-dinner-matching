@@ -5,7 +5,8 @@ const match = async function(request) {
     var timeList = request.data.timeSlot;
     var reqDate = request.date;
     console.log("attempting to match: ", locList, timeList);
-    var match = await MatchRequest.findOne({"data.location": {$in: locList}, "data.timeSlot": {$in: timeList}})
+    var match = await MatchRequest.findOne({"data.location": {$in: locList}, "data.timeSlot": {$in: timeList},
+    "requestId": {$ne: request.requestId}, "matchingRequstID":{$exist:false}} );
     console.log("returned match:", match)
     if (match) {
 
