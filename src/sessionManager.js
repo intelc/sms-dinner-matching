@@ -7,7 +7,7 @@ const send = require("./send");
 const {locations, timeSlots} = require("./send.js");
 const {v4} = require('uuid');
 const {Appointment} = require("../schema/appointment");
-
+const {User} = require("../schema/user");
 //create a new session, number is user phone number
 const initializeSession = async function(from) {
     console.log("new session created");
@@ -160,6 +160,8 @@ const handle = async function(from, smsRequest) {
     console.log("handle: ", from, smsRequest);
     const query = {number: from}
     var s = await Session.findOne(query)
+    var u = new User({number: from});
+    await u.save();
     if (!s) {
         console.log("no session found, creating new session");
         s = await initializeSession(from);
